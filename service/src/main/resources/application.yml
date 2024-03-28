@@ -1,0 +1,17 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 8089
+
+
+keytool:
+  config:
+    key-size: 1024
+    creator-name: sun.y
+    organizational-unit: com.uicsoft
+    organization: uicsoft
+    city: hefei
+    area: hefei
+    country: cn
+    expireTime: 3650
+    privateAlias: privatekey
+    privatekeyPassword: uic@20240327
