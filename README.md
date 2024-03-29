@@ -1,5 +1,7 @@
 # License证书
-    
+## 使用
+    prod环境会添加证书拦截器，安装证书
+    其他环境证书不生效
 ## 说明
     config       - SpringMvC过滤器，添加自定义拦截器. StartShowInfo项目启动会显示硬件信息
     controller   - 测试请求 和 获取用户服务器的硬件信息接口

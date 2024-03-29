@@ -5,10 +5,12 @@ import com.frank.license.LicenseVerifyParam;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -52,27 +54,33 @@ public class LicenseCheckListener implements ApplicationListener<ContextRefreshe
     @Value("${license.publicKeysStorePath}")
     private String publicKeysStorePath;
 
+    @Autowired
+    private Environment env;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        //root application context 没有parent，
-        ApplicationContext context = event.getApplicationContext().getParent();
-        // context == null则context是父容器,安装证书，不为null则为子容器
-        if(context == null){
-            if(StringUtils.isNotBlank(licensePath)){
-                logger.info("++++++++ 开始安装证书 ++++++++");
+        String activeProfile = env.getActiveProfiles()[0];
+        if ("prod".equals(activeProfile)) {
+            //root application context 没有parent，
+            ApplicationContext context = event.getApplicationContext().getParent();
+            // context == null则context是父容器,安装证书，不为null则为子容器
+            if(context == null){
+                if(StringUtils.isNotBlank(licensePath)){
+                    logger.info("++++++++ 开始安装证书 ++++++++");
 
-                LicenseVerifyParam param = new LicenseVerifyParam();
-                param.setSubject(subject);
-                param.setPublicAlias(publicAlias);
-                param.setStorePass(storePass);
-                param.setLicensePath(licensePath);
-                param.setPublicKeysStorePath(publicKeysStorePath);
+                    LicenseVerifyParam param = new LicenseVerifyParam();
+                    param.setSubject(subject);
+                    param.setPublicAlias(publicAlias);
+                    param.setStorePass(storePass);
+                    param.setLicensePath(licensePath);
+                    param.setPublicKeysStorePath(publicKeysStorePath);
 
-                LicenseVerify licenseVerify = new LicenseVerify();
-                //安装证书
-                licenseVerify.install(param);
+                    LicenseVerify licenseVerify = new LicenseVerify();
+                    //安装证书
+                    licenseVerify.install(param);
 
-                logger.info("++++++++ 证书安装结束 ++++++++");
+                    logger.info("++++++++ 证书安装结束 ++++++++");
+                }
             }
         }
     }

@@ -4,10 +4,12 @@ import com.frank.license.AbstractServerInfos;
 import com.frank.license.LicenseCheckModel;
 import com.frank.license.LinuxServerInfos;
 import com.frank.license.WindowsServerInfos;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.core.env.Environment;
 
 /**
  * @Auther: uicsoft-frank
@@ -31,12 +33,11 @@ public class StartShowInfo implements ApplicationRunner {
             abstractServerInfos = new WindowsServerInfos();
         } else if (osName.startsWith("linux")) {
             abstractServerInfos = new LinuxServerInfos();
-        }else{//其他服务器类型
+        } else {//其他服务器类型
             abstractServerInfos = new LinuxServerInfos();
         }
 
         LicenseCheckModel serverInfos = abstractServerInfos.getServerInfos();
-        System.out.println("系统的硬件信息是："+serverInfos.toString());
-
+        System.out.println("系统的硬件信息是：" + serverInfos.toString());
     }
 }
